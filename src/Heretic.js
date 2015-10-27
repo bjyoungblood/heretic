@@ -97,6 +97,29 @@ export default class Heretic extends EventEmitter {
       });
   }
 
+  async retry(id) {
+    await this.init();
+
+    return await this.knex.transaction(async (trx) => {
+      let result = await this.knex(this.options.tableName)
+        .update({ status : 'pending' })
+        .where({ id })
+        .returning('*');
+
+      let job = result[0];
+
+      if (! job) {
+        throw new Error('Job not found');
+      }
+
+      await this.publishConfirm(
+        this.options.jobsExchange,
+        job.queue_name,
+        new Buffer(JSON.stringify({ id : job.id })),
+      );
+    });
+  }
+
   process(name, concurrency, handler) {
     Joi.assert(name, Joi.string().label('name'));
     Joi.assert(concurrency, Joi.number().min(1).label('concurrency'));
