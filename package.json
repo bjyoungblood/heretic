@@ -1,7 +1,7 @@
 {
   "name": "heretic",
   "version": "0.0.1",
-  "main": "lib/Heretic.js",
+  "main": "dist/Heretic.js",
   "dependencies": {
     "amqplib": "^0.4.0",
     "bluebird": "^2.10.2",
