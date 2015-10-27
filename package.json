@@ -1,0 +1,33 @@
+{
+  "name": "heretic",
+  "version": "0.0.0",
+  "main": "lib/Heretic.js",
+  "dependencies": {
+    "amqplib": "^0.4.0",
+    "bluebird": "^2.10.2",
+    "joi": "^6.9.1"
+  },
+  "devDependencies": {
+    "babel": "^5.8.29",
+    "babel-eslint": "^4.1.3",
+    "eslint": "^1.7.3",
+    "eslint-config-helioslabs": "^1.1.0",
+    "eslint-plugin-cah": "^0.2.0",
+    "eslint-plugin-react": "^3.6.3"
+  },
+  "scripts": {
+    "test": "eslint .",
+    "prepublish": "rm -r dist || true; babel src/ --modules common --out-dir dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bjyoungblood/heretic.git"
+  },
+  "author": "Ben Youngblood <bx.youngblood@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bjyoungblood/heretic/issues"
+  },
+  "homepage": "https://github.com/bjyoungblood/heretic#readme",
+  "description": ""
+}

@@ -1,0 +1,6 @@
+{
+  "extends": "helioslabs",
+  "rules": {
+    "max-depth": [ 2, 4 ],
+  }
+}
