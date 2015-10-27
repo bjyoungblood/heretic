@@ -138,8 +138,8 @@ export default class Heretic extends EventEmitter {
       this.emit('jobSuccess', job);
     });
 
-    this.queues[name].on('jobFailed', (err, job) => {
-      this.emit('jobFailed', err, job);
+    this.queues[name].on('jobFailed', (job, err) => {
+      this.emit('jobFailed', job, err);
     });
   }
 
