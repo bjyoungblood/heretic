@@ -1,6 +1,6 @@
 {
   "name": "heretic",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "lib/Heretic.js",
   "dependencies": {
     "amqplib": "^0.4.0",
