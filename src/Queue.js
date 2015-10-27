@@ -132,7 +132,11 @@ export default class Queue extends EventEmitter {
       .where({ id : jobId})
       .update({
         status : 'failed',
-        attempt_logs : this.knex.raw('attempt_logs || ARRAY[?]', message),
+        attempt_logs : this.knex.raw('attempt_logs || ?::jsonb', JSON.stringify({
+          time : new Date(),
+          status : 'failed',
+          message : message,
+        })),
         last_attempted_at : new Date(),
       })
       .returning('*');
@@ -145,7 +149,11 @@ export default class Queue extends EventEmitter {
       .where({ id : jobId })
       .update({
         status : 'success',
-        attempt_logs : this.knex.raw('attempt_logs || ARRAY[?]', 'success'),
+        attempt_logs : this.knex.raw('attempt_logs || ?::jsonb', JSON.stringify({
+          time : new Date(),
+          status : 'success',
+          message : 'success',
+        })),
         last_attempted_at : new Date(),
       })
       .returning('*');

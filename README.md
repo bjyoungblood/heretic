@@ -36,7 +36,7 @@ CREATE TABLE heretic_jobs (
   queue_name text NOT NULL,
   status text DEFAULT 'pending',
   payload jsonb,
-  attempt_logs text[] DEFAULT '{}',
+  attempt_logs jsonb[] DEFAULT '{}',
   max_attempts int NOT NULL DEFAULT 1,
   created_at timestamptz NOT NULL DEFAULT now(),
   updated_at timestamptz NOT NULL DEFAULT now(),
