@@ -22,6 +22,8 @@ const optionsSchema = Joi.object().keys({
       Application : Joi.string().optional(),
     }),
   }),
+
+  writeOutcomes : Joi.boolean().default('true'),
 });
 
 export default class Heretic extends EventEmitter {
@@ -175,29 +177,35 @@ export default class Heretic extends EventEmitter {
     ch.on('error', (err) => {});
 
     await ch.assertExchange(this.options.jobsExchange, 'topic', { durable : true });
-    await ch.assertExchange(this.options.outcomesExchange, 'topic', { durable : true });
+    if (this.options.writeOutcomes) {
+      await ch.assertExchange(this.options.outcomesExchange, 'topic', { durable : true });
+    }
     await ch.assertExchange(this.options.deadJobsExchange, 'direct', {
       durable : true,
       internal : true,
     });
 
-    await ch.assertQueue(this.options.jobOutcomesQueue, {
-      durable : true,
-      arguments : {
-        'x-dead-letter-exchange' : this.options.deadJobsExchange,
-        'x-dead-letter-routing-key' : this.options.deadJobsQueue,
-      },
-    });
+    if (this.options.writeOutcomes) {
+      await ch.assertQueue(this.options.jobOutcomesQueue, {
+        durable : true,
+        arguments : {
+          'x-dead-letter-exchange' : this.options.deadJobsExchange,
+          'x-dead-letter-routing-key' : this.options.deadJobsQueue,
+        },
+      });
+    }
 
     await ch.assertQueue(this.options.deadJobsQueue, {
       durable : true,
     });
 
-    await ch.bindQueue(
-      this.options.jobOutcomesQueue,
-      this.options.outcomesExchange,
-      this.options.outcomeRoutingKeyPrefix + '.#',
-    );
+    if (this.options.writeOutcomes) {
+      await ch.bindQueue(
+        this.options.jobOutcomesQueue,
+        this.options.outcomesExchange,
+        this.options.outcomeRoutingKeyPrefix + '.#',
+      );
+    }
 
     for (let name in this.queues) {
       if (! this.queues.hasOwnProperty(name)) {
