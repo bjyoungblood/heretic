@@ -104,11 +104,13 @@ export default class Queue extends EventEmitter {
           let savedJob = await this.jobSuccess(trx, job.id);
           this.emit('jobSuccess', savedJob);
 
-          await this.publishConfirm(
-            this.heretic.options.outcomesExchange,
-            `${this.heretic.options.outcomeRoutingKeyPrefix}.success`,
-            message.content,
-          );
+          if (this.heretic.options.writeOutcomes) {
+            await this.publishConfirm(
+              this.heretic.options.outcomesExchange,
+              `${this.heretic.options.outcomeRoutingKeyPrefix}.success`,
+              message.content,
+            );
+          }
 
           this.channel.ack(message, false);
         })
@@ -116,11 +118,13 @@ export default class Queue extends EventEmitter {
           let savedJob = await this.jobFailed(trx, job.id, err.stack);
           this.emit('jobFailed', savedJob, err);
 
-          await this.publishConfirm(
-            this.heretic.options.outcomesExchange,
-            `${this.heretic.options.outcomeRoutingKeyPrefix}.failed`,
-            message.content,
-          );
+          if (this.heretic.options.writeOutcomes) {
+            await this.publishConfirm(
+              this.heretic.options.outcomesExchange,
+              `${this.heretic.options.outcomeRoutingKeyPrefix}.failed`,
+              message.content,
+            );
+          }
 
           this.channel.ack(message, false);
         });
